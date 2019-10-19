@@ -6,7 +6,7 @@ estNewf0 = estF0; %%for the 1st iteration
 LNew = L; %%for the 1st iteration
 diff = Inf;
 i = 0; 
-noMaxIter = 8; 
+noMaxIter = 10; 
 p1 = 25; %%pre-whitening order; 
 small_delta = 1e-5; %%regularization for APES 
 %f0Estimator = fastF0Nls(N,27,[65 370]/8000); 
@@ -18,8 +18,8 @@ small_delta = 1e-5; %%regularization for APES
 %  stepsize_rel = stepsize./(4000)*2*pi;
 % noIterFib = 15; 
 
-while (i<noMaxIter) & (diff>1e-6) %repeat regardless 
-  if flag ==1 
+while (i<noMaxIter) & (diff>1e-6) 
+  if flag ==1  %%Using LS approach 
      if LNew>0
         Dnls = zeros(1,LNew); %%search of perturbations from pre-whitened data
         expMtx = ZDreal(2*pi*estNewf0,N,LNew,Dnls);        
@@ -34,7 +34,7 @@ while (i<noMaxIter) & (diff>1e-6) %repeat regardless
         diff = 0; 
         J_old = Inf; %%to expect if the frame was unvoiced it remains:) !!! 
     end
-    else %%Odd iterations do APES-filtering
+  else   %%%Using APES approach
         if LNew>0
         lpcPrewParam = [lpcPrewParam(:);zeros(N-size(lpcPrewParam(:),1),1)];
         Dnls = zeros(1,LNew);
@@ -47,13 +47,14 @@ while (i<noMaxIter) & (diff>1e-6) %repeat regardless
         invQ_apes = (toep1*toep1'-toep2*toep2')/gPrew;
         H_apes = real(invQ_apes*expMtx*inv(expMtx'*invQ_apes*...
             expMtx+small_delta*eye(2*LNew))*expMtx');
+        %%see http://madsgc.blog.aau.dk/files/2016/10/notes.pdf 
         sHat=H_apes'*y;
         else
         sHat=zeros(1,N);
         diff = 0; 
         J_old = Inf; %%to expect if the frame was unvoiced it remains:) !!! 
         end
-    end
+  end %%Next is for both cases 
     zHat = y-sHat(:); 
     lpcPrewParam = lpc(zHat,p1);
     prew_y = filter(lpcPrewParam,1,y); 
