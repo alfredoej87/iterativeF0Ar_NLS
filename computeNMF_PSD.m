@@ -20,9 +20,7 @@ for tt=1:TotalFrames
     noise_actC = all_actC(tt,numSpeechVct+1:end);
     speechPower = currDict(:,1:numSpeechVct)*sp_actC';
     noisePower = currDict(:,numSpeechVct+1:end)*noise_actC';
-   % aprioriSNR = speechPower./noisePower; 
     aprioriSNR = speechPower./max(noisePower,1e-12); 
-    %%%%%aprioriSNR = max(10^(-15/10),aprioriSNR); 
     wghtPSD = (((1./(1+aprioriSNR))).^2).*currentNoisyPSD;
     wghtNoiseVar = (aprioriSNR./(1+aprioriSNR)).*noisePower;
     NMFPSDhat(tt,:) = wghtPSD+wghtNoiseVar;   
@@ -46,8 +44,7 @@ ActivationCoeff = rand(size(AR_PSD_BasisMtx,2),1);
 numberIterations = 35;
 else
    numberIterations = 35; %%30; 
-    ActivationCoeff = rand(size(AR_PSD_BasisMtx,2),1); %%prev_Frame_Actv_Coeff; 
-    %%ActivationCoeff = prev_Frame_Actv_Coeff; 
+    ActivationCoeff = rand(size(AR_PSD_BasisMtx,2),1); %
 end 
 for times = 1:numberIterations
     Factor=AR_PSD_BasisMtx'*(((AR_PSD_BasisMtx*ActivationCoeff).^(-2)).*...
