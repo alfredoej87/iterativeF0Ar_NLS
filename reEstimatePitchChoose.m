@@ -8,7 +8,7 @@ diff = Inf;
 i = 0; 
 noMaxIter = 10; 
 p1 = 25; %%pre-whitening order; 
-small_delta = 1e-5; %%regularization for APES 
+small_delta = 1e-5; %%regularization for LCMV 
 %f0Estimator = fastF0Nls(N,27,[65 370]/8000); 
 
 %%Uncomment when considering inharmonicities
@@ -21,7 +21,7 @@ small_delta = 1e-5; %%regularization for APES
 while (i<noMaxIter) & (diff>1e-6) 
   if flag ==1  %%Using LS approach 
      if LNew>0
-        Dnls = zeros(1,LNew); %%search of perturbations from pre-whitened data
+        Dnls = zeros(1,LNew); %%if harmonic perturbations are desired change
         expMtx = ZDreal(2*pi*estNewf0,N,LNew,Dnls);        
         J_old=real((prew_y'*expMtx)*inv(expMtx'*expMtx)*(expMtx'*prew_y));        
         ampsLS = inv(expMtx'*expMtx)*expMtx'*y;
@@ -32,27 +32,26 @@ while (i<noMaxIter) & (diff>1e-6)
     else
         sHat=zeros(1,N);
         diff = 0; 
-        J_old = Inf; %%to expect if the frame was unvoiced it remains:) !!! 
+        J_old = Inf; %%if the frame still detected as unvoiced
     end
-  else   %%%Using APES approach
+  else   %%%Using LCMV approach
         if LNew>0
         lpcPrewParam = [lpcPrewParam(:);zeros(N-size(lpcPrewParam(:),1),1)];
         Dnls = zeros(1,LNew);
        %  Dnls = D_nls_real(prew_y,2*pi*estNewf0,D_range_rel,...
-        %             stepsize_rel,LNew,noIterFib);
+        %             stepsize_rel,LNew,noIterFib);%%uncomment for perturbations
         expMtx = ZDreal(2*pi*estNewf0,N,LNew,Dnls);       
         J_old=real((prew_y'*expMtx)*inv(expMtx'*expMtx)*(expMtx'*prew_y));      
         toep1 = tril(toeplitz(lpcPrewParam'));
         toep2 = tril(toeplitz([0 lpcPrewParam(end:-1:2)']));
         invQ_apes = (toep1*toep1'-toep2*toep2')/gPrew;
-        H_apes = real(invQ_apes*expMtx*inv(expMtx'*invQ_apes*...
+        H_lcmv = real(invQ_apes*expMtx*inv(expMtx'*invQ_apes*...
             expMtx+small_delta*eye(2*LNew))*expMtx');
-        %%see http://madsgc.blog.aau.dk/files/2016/10/notes.pdf 
-        sHat=H_apes'*y;
+        sHat=H_lcmv'*y;
         else
         sHat=zeros(1,N);
         diff = 0; 
-        J_old = Inf; %%to expect if the frame was unvoiced it remains:) !!! 
+        J_old = Inf; %%to expect if the frame was unvoiced 
         end
   end %%Next is for both cases 
     zHat = y-sHat(:); 
