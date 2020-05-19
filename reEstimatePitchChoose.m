@@ -19,7 +19,7 @@ small_delta = 1e-5; %%regularization for LCMV
 % noIterFib = 15; 
 
 while (i<noMaxIter) & (diff>1e-6) 
-  if flag ==1  %%Using LS approach 
+  if flag ==1  %%Using approx-ML approach 
      if LNew>0
         Dnls = zeros(1,LNew); %%if harmonic perturbations are desired change
         expMtx = ZDreal(2*pi*estNewf0,N,LNew,Dnls);        
