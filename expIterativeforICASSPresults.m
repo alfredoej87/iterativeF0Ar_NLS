@@ -24,9 +24,6 @@ f0BoundsHz = [60 400];
 f0Bounds = f0BoundsHz/fs; 
 f0Estimator = fastF0Nls(N1,Lmax,f0Bounds); 
 %f0Estimator2 = fastF0Nls(N1,Lmax,f0Bounds); 
-%%Parameters for SHRP method 
-% frame_length_ms = N1/(fs/1000); % timestep = 10; % SHR_Thresh = 0.35; 
-% ceiling = 1250; % med_smooth = 0;
 
 %%pre-whitening parameters 
 N2 = N1; M2=M1; 
@@ -78,18 +75,14 @@ for nF = 56:60%%52:60%%1:10%%nFiles
             %%Estimate for Cepstral, SHRP, RAPT and YIN 
             [pitchCEPST,nfrm] = cepstral(y1, fs, 60, 400, 0.01,2.0);
             pitchCEPST(pitchCEPST==0)=NaN;
-%             [~,pitchSHRP,~,~]=shrp(y1,fs,f0BoundsHz,frame_length_ms,...
-%                 timestep,SHR_Thresh, ceiling,med_smooth,1);
-%            pitchSHRP(pitchSHRP==0)=NaN;
            [pitchRAPT,ttrapt] = estimateRAPT(y1,fs,'u');%%Include unvoiced frames
            periodYIN = yin2NEW(y1); 
            pitchYIN= fs./periodYIN.prd; 
             [~,vuvYIN,~,~]=SRH_PitchTracking(y1,fs,f0BoundsHz(1),f0BoundsHz(2)); 
-            pitchYIN(vuvYIN==0)=NaN; %%to NaN since for GER
-             
+            pitchYIN(vuvYIN==0)=NaN;            
              
             total_prewht_frames = floor(lengthClean/M1);
-            window = rectwin(N1); %%window for pitch-estimation
+            window = rectwin(N1); 
             clear lpc_mmse; clear g_mmse; clear lpc_nmf; clear g_nmf; 
             spectrum = fft(enframe(y1,window,M1),N1,2); 
             periodogram = spectrum.*conj(spectrum)/N1; 
@@ -113,11 +106,6 @@ for nF = 56:60%%52:60%%1:10%%nFiles
                    [estf0_nmf(1,nF,nT,nS,idf),estOrd_nmf(1,nF,nT,nS,idf)]=...
                       f0Estimator.estimate(y1_nmfPrew(idx));
                   estf0_nmf(1,nF,nT,nS,idf) = estf0_nmf(1,nF,nT,nS,idf)*fs;
-%                   [estf0_nmf(2,nF,nT,nS,idf),it(1,nF,nT,nS,idf)]=...
-%                       reEstimatePitchConv(y1(idx),estf0_nmf(1,nF,nT,nS,idf)/fs,...
-%                       estOrd_nmf(1,nF,nT,nS,idf),N1,M1,lpc_nmf(:,idf),...
-%                       g_nmf(idf),y1_nmfPrew(idx),f0Estimator);
-%                   estf0_nmf(2,nF,nT,nS,idf) = estf0_nmf(2,nF,nT,nS,idf)*fs;
                   [estf0_nmf(2,nF,nT,nS,idf),it(1,nF,nT,nS,idf)]=...
                       reEstimatePitchChoose(y1(idx),estf0_nmf(1,nF,nT,nS,idf)/fs,...
                       estOrd_nmf(1,nF,nT,nS,idf),N1,M1,lpc_nmf(:,idf),...
