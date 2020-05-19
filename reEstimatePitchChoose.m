@@ -44,8 +44,8 @@ while (i<noMaxIter) & (diff>1e-6)
         J_old=real((prew_y'*expMtx)*inv(expMtx'*expMtx)*(expMtx'*prew_y));      
         toep1 = tril(toeplitz(lpcPrewParam'));
         toep2 = tril(toeplitz([0 lpcPrewParam(end:-1:2)']));
-        invQ_apes = (toep1*toep1'-toep2*toep2')/gPrew;
-        H_lcmv = real(invQ_apes*expMtx*inv(expMtx'*invQ_apes*...
+        invQ_lcmv = (toep1*toep1'-toep2*toep2')/gPrew;
+        H_lcmv = real(invQ_lcmv*expMtx*inv(expMtx'*invQ_lcmv*...
             expMtx+small_delta*eye(2*LNew))*expMtx');
         sHat=H_lcmv'*y;
         else
