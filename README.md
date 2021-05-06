@@ -15,5 +15,5 @@ logModelPrior = log([(1-voicingProb), ones(1,obj.L)*voicingProb/obj.L]);
 
 %%In babble noise (and nonstationary noise, e.g., restaurant noise), a better improvement is achieved with using 256 noise spectral envelopes instead of the 16 for the ICASSP submission, when applying the initial pre-whitening (i.e., pre-processing) step. 
 
-%%Even if some form of pre-processing (e.g, pre-whitening or speech enhancement) benefits non-parametric pitch estimators (e.g., RAPT and SWIPE), a better accuracy from the iterative F0 (NLS)-AR is observed, specially at low iSNRs, even if the resulting pitch estimates are not smoothed. 
+%%Even if some form of pre-processing (e.g, pre-whitening or speech enhancement) benefits non-parametric pitch estimators (e.g., RAPT and SWIPE), a better accuracy from the iterative F0 (NLS)-AR is observed, specially at low iSNRs, even if the resulting F0 estimates are not smoothed. 
 
