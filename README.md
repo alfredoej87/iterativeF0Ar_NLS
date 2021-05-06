@@ -1,5 +1,7 @@
 # iterativeF0Ar_NLS
 
+Code for ICASSP 2020 paper "Robust Fundamental Frequency Estimation in Coloured noise" 
+
 %%Needs to previously download the fast F0 NLS estimator from https://github.com/jkjaer/fastF0Nls (i.e., the Maximum Likelihood Estimator under a white Gaussian noise assumption). 
 For voicing detection, in the file fastF0Nls.m, in the Step 1 (compute the priors on the pitch and the model ), it is suggested to modify the prior of the model, by assigning a voicing probability, e.g., 
 
