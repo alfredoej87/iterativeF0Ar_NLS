@@ -4,6 +4,7 @@
 For voicing detection, in the file fastF0Nls.m, in the Step 1 (compute the priors on the pitch and the model ), it is suggested to modify the prior of the model, by assigning a voicing probability, e.g., 
 
 voicingProb = 0.60;  %%i.e., the probability of a not-voiced model (either unvoiced speech or silence) is 0.40
+
 logModelPrior = log([(1-voicingProb), ones(1,obj.L)*voicingProb/obj.L]);
 
 %%The ICASSP 2020 results can be obtained from running the file expIterativeforICASSPresults.m (need to add the directory of fastF0Nls) 
