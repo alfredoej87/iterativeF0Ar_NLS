@@ -17,3 +17,5 @@ logModelPrior = log([(1-voicingProb), ones(1,obj.L)*voicingProb/obj.L]);
 
 %%Even if some form of pre-processing (e.g, pre-whitening or speech enhancement) benefits non-parametric pitch estimators (e.g., RAPT and SWIPE), a better accuracy from the iterative F0 (NLS)-AR is observed, specially at low iSNRs, even if the resulting F0 estimates are not smoothed. 
 
+%%%In high iSNR scenarios, it might be better not to initially pre-whiten the signal, but still following the iterative estimation (i.e., 1st estimate the pitch and then estimate the AR parameters after an approximate modelled stochastic residual was obtained)
+
