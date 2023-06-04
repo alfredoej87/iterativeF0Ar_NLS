@@ -20,5 +20,5 @@ logModelPrior = log([(1-voicingProb), ones(1,obj.L)*voicingProb/obj.L]);
 %%%In high iSNR scenarios, it might be better not to initially pre-whiten the signal, but still following the iterative estimation (i.e., 1st estimate the pitch and then estimate the AR parameters after an approximate modelled stochastic residual was obtained)
 
 %%At very low SNRs in very non-stationary noise (e.g., babble or restaurant), pre-whitening followed by NLS pitch estimates and applying re-iterative estimation 
-leads to the best performance in terms of FFE (including gross errors and voicing detections) as compared to a joint estimator (in case one is interested in better accuracy). Although such result was not reported yet in a paper, I hope I can update such results in this repo.
+leads to the best performance in terms of FFE (including gross errors and voicing detections) as compared to a joint estimator (in case one is interested in better accuracy) (the difference was around 5%, I think). Although such result was not reported yet in a paper, I hope I can update such results in this repo.
 
